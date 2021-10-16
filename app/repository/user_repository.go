@@ -18,7 +18,12 @@ var (
 
 func (repo *repository) GetAllUsers() ([]*domain.User, *utils.ApplicationError) {
 
-	db := utils.CreateConnection()
+	db, err := utils.CreateConnection()
+
+	if err != nil {
+		log.Fatalf("Unable to connect to database %v", err)
+	}
+
 	defer db.Close()
 
 	var users []*domain.User
@@ -60,7 +65,11 @@ func (repo *repository) GetAllUsers() ([]*domain.User, *utils.ApplicationError) 
 
 func (repo *repository) GetUser(userID string) (*domain.User, *utils.ApplicationError) {
 
-	db := utils.CreateConnection()
+	db, err := utils.CreateConnection()
+
+	if err != nil {
+		log.Fatalf("Unable to connect to database %v", err)
+	}
 
 	defer db.Close()
 
@@ -70,12 +79,16 @@ func (repo *repository) GetUser(userID string) (*domain.User, *utils.Application
 
 	row := db.QueryRow(sqlStatement, userID)
 
-	err := row.Scan(&user.UserID, &user.Name)
+	err = row.Scan(&user.UserID, &user.Name)
 
 	switch err {
 	case sql.ErrNoRows:
-		fmt.Println("No rows were returned!")
-		return user, nil
+		fmt.Printf("Error in Get Data: %v", err)
+		return nil, &utils.ApplicationError{
+			Message:    "userid not found",
+			StatusCode: http.StatusNotFound,
+			Code:       "not_found",
+		}
 	case nil:
 		return user, nil
 	default:

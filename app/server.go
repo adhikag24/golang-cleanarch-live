@@ -1,6 +1,7 @@
 package app
 
 import (
+	"bitbucket.org/adhikag24/golang-api/app/migration"
 	"bitbucket.org/adhikag24/golang-api/app/routes"
 	"github.com/gin-gonic/gin"
 )
@@ -11,6 +12,11 @@ var (
 
 func init() {
 	Router = gin.Default()
+}
+
+func PrepareApp() error {
+	err := migration.RunMigration()
+	return err
 }
 
 func StartApp() {
