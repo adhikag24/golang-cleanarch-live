@@ -6,22 +6,21 @@ import (
 	"bitbucket.org/adhikag24/golang-api/app/utils"
 )
 
-type usersUseCase struct{}
+type UserUseCase struct {
+	rpo repository.Repo
+}
 
-var (
-	UsersUseCase usersUseCase
-)
-
-func (u *usersUseCase) GetUser(userId string) (*domain.User, *utils.ApplicationError) {
-	user, err := repository.Repository.GetUser(userId)
+func (u *UserUseCase) GetUser(userId string) (*domain.User, *utils.ApplicationError) {
+	user, err := u.rpo.GetUser(userId)
 	if err != nil {
 		return nil, err
 	}
 	return user, nil
 }
 
-func (u *usersUseCase) GetAllUsers() ([]*domain.User, *utils.ApplicationError) {
-	user, err := repository.Repository.GetAllUsers()
+func (u *UserUseCase) GetAllUsers() ([]*domain.User, *utils.ApplicationError) {
+
+	user, err := u.rpo.GetAllUsers()
 	if err != nil {
 		return nil, err
 	}

@@ -10,19 +10,11 @@ import (
 	"bitbucket.org/adhikag24/golang-api/app/utils"
 )
 
-type repository struct{}
+type Repository struct {
+}
 
-var (
-	Repository repository
-)
-
-func (repo *repository) GetAllUsers() ([]*domain.User, *utils.ApplicationError) {
-
-	db, err := utils.CreateConnection()
-
-	if err != nil {
-		log.Fatalf("Unable to connect to database %v", err)
-	}
+func (repo *Repository) GetAllUsers() ([]*domain.User, *utils.ApplicationError) {
+	db := utils.CreateConnection()
 
 	defer db.Close()
 
@@ -38,7 +30,6 @@ func (repo *repository) GetAllUsers() ([]*domain.User, *utils.ApplicationError) 
 
 	defer rows.Close()
 
-	// iterate over the rows
 	for rows.Next() {
 		var user = &domain.User{}
 		// unmarshal the row object to user
@@ -63,23 +54,16 @@ func (repo *repository) GetAllUsers() ([]*domain.User, *utils.ApplicationError) 
 
 }
 
-func (repo *repository) GetUser(userID string) (*domain.User, *utils.ApplicationError) {
+func (repo *Repository) GetUser(userID string) (*domain.User, *utils.ApplicationError) {
 
-	db, err := utils.CreateConnection()
-
-	if err != nil {
-		log.Fatalf("Unable to connect to database %v", err)
-	}
-
+	db := utils.CreateConnection()
 	defer db.Close()
 
 	var user = &domain.User{}
 
 	sqlStatement := `SELECT * FROM users WHERE userid=$1`
-
 	row := db.QueryRow(sqlStatement, userID)
-
-	err = row.Scan(&user.UserID, &user.Name)
+	err := row.Scan(&user.UserID, &user.Name)
 
 	switch err {
 	case sql.ErrNoRows:

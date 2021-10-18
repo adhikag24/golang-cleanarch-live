@@ -1,28 +1,31 @@
 package app
 
 import (
-	"bitbucket.org/adhikag24/golang-api/app/migration"
+	"bitbucket.org/adhikag24/golang-api/app/controllers"
+	"bitbucket.org/adhikag24/golang-api/app/repository"
 	"bitbucket.org/adhikag24/golang-api/app/routes"
-	"github.com/gin-gonic/gin"
+	"bitbucket.org/adhikag24/golang-api/app/usecase"
 )
 
-var (
-	Router *gin.Engine
-)
+// var (
+// 	Router *gin.Engine
+// )
 
-func init() {
-	Router = gin.Default()
-}
-
-func PrepareApp() error {
-	err := migration.RunMigration()
-	return err
-}
+// func init() {
+// 	Router = gin.Default()
+// }
 
 func StartApp() {
-	routes.Routes.Router(Router)
+	//initialize routes
+	repo := repository.NewRepo()
+	usecase := usecase.NewUC(repo)
+	ctrl := controllers.NewControllers(usecase)
+	router := routes.NewRouter(ctrl)
+	// user, err := ctrl.DisplayAllUsers()
+	// fmt.Printf(user,err)
+	app := router.Router()
 
-	if err := Router.Run(":8080"); err != nil {
+	if err := app.Run(":8080"); err != nil {
 		panic(err)
 	}
 

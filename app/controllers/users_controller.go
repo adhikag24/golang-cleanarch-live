@@ -8,7 +8,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func DisplayUser(c *gin.Context) {
+type UserController struct {
+	UC usecase.UC
+}
+
+func (u *UserController) DisplayUser(c *gin.Context) {
 	userId := c.PostForm("userid")
 	if userId == "" {
 		apiErr := &utils.ApplicationError{
@@ -20,7 +24,7 @@ func DisplayUser(c *gin.Context) {
 		return
 	}
 
-	user, apiErr := usecase.UsersUseCase.GetUser(userId)
+	user, apiErr := u.UC.GetUser(userId)
 	if apiErr != nil {
 		utils.RespondError(c, apiErr)
 		return
@@ -29,9 +33,8 @@ func DisplayUser(c *gin.Context) {
 	utils.Respond(c, http.StatusOK, user)
 }
 
-func DisplayAllUsers(c *gin.Context) {
-
-	user, apiErr := usecase.UsersUseCase.GetAllUsers()
+func (u *UserController) DisplayAllUsers(c *gin.Context) {
+	user, apiErr := u.UC.GetAllUsers()
 
 	if apiErr != nil {
 		utils.RespondError(c, apiErr)
