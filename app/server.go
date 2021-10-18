@@ -24,7 +24,7 @@ func StartApp() {
 	router := routes.NewRouter(ctrl)
 	app := router.Router()
 
-	port := fmt.Sprintf(": %s", os.Getenv("PORT"))
+	port := fmt.Sprintf(":%s", os.Getenv("PORT"))
 
 	fmt.Println(port)
 
