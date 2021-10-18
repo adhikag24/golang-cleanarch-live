@@ -7,9 +7,7 @@ import (
 )
 
 type UC interface {
-	//user
 	GetUser(userId string) (*domain.User, *utils.ApplicationError)
-	//section
 	GetAllUsers() ([]*domain.User, *utils.ApplicationError)
 }
 
