@@ -29,7 +29,7 @@ func StartApp() {
 	fmt.Println(port)
 
 	if err := app.Run(port); err != nil {
-		panic(err)
+		log.Fatalf("Error when start application: %s", err)
 	}
 
 }
