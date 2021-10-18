@@ -15,7 +15,7 @@ func (r *routes) Router(router *gin.Engine) {
 	router.POST("/user", controllers.DisplayUser)
 	router.GET("/users", controllers.DisplayAllUsers)
 	router.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{"message": "123123123"})
+		c.JSON(200, gin.H{"message": "Hello, this is Golang API Test Case."})
 	})
 
 }
